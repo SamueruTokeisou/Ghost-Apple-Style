@@ -54,7 +54,7 @@
    
    将 `Ghost-Apple-Style` 中的完整代码粘贴到 **Site Footer** 区域
    
-   *Paste the complete code from `ghost-apple-style.html` into the **Site Footer** section*
+   *Paste the complete code from `Ghost-Apple-Style` into the **Site Footer** section*
 
 4. **保存并刷新 / Save and Refresh**
    
