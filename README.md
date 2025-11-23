@@ -78,15 +78,6 @@ Ghost-Apple-Style/
 
 ---
 
-## 🎨 效果预览 Preview
-
-### 亮色模式 Light Mode
-![Light Mode Preview](preview/light-mode.png)
-
-### 暗色模式 Dark Mode
-![Dark Mode Preview](preview/dark-mode.png)
-
----
 
 ## ⚙️ 自定义配置 Customization
 
