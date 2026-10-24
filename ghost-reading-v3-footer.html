@@ -1,0 +1,65 @@
+<!-- TOKEISOU READING v3 SCRIPT -->
+<script>
+(() => {
+  'use strict';
+  const icon = (kind) => {
+    const shapes = {list:'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',copy:'M9 9h11v11H9zM15 9V4H4v11h5',up:'m6 14 6-6 6 6',system:'M3 4h18v13H3zM8 21h8M12 17v4',light:'M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 1.4 1.4M17 17l1.4 1.4M5.6 18.4 1.4-1.4M17 7l1.4-1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0',dark:'M20 14a8 8 0 0 1-10-10 8.5 8.5 0 1 0 10 10'};
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','tr-icon');svg.setAttribute('aria-hidden','true');
+    const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',shapes[kind]);svg.append(path);return svg;
+  };
+  function start(){
+    // Keep Ghost's links, Portal, search, cards and comment frames intact.
+    const labels={Home:'首页',About:'关于',Article:'文章','Sign up':'注册','Subscribe':'订阅','Sign in':'登录','Powered by Ghost':'由 Ghost 驱动'};
+    document.querySelectorAll('#gh-head a,footer a').forEach(a=>{const t=a.textContent.trim();if(labels[t]&&!a.children.length)a.textContent=labels[t];});
+    const content=document.querySelector('body.post-template article.article .gh-content');
+    if(!content||content.dataset.trReady)return;
+    content.dataset.trReady='3';
+    const system=matchMedia('(prefers-color-scheme: dark)'),wide=matchMedia('(min-width:1200px)');
+    let preference='system';try{preference=localStorage.getItem('tokeisou-reading-theme')||'system';}catch{}
+    if(!['system','light','dark'].includes(preference))preference='system';
+    const controls=document.createElement('div');controls.className='tr-controls';
+    const theme=document.createElement('button');theme.type='button';theme.className='tr-theme';
+    const applyTheme=()=>{document.body.dataset.trTheme=preference==='system'?(system.matches?'dark':'light'):preference;const text={system:'自动',light:'浅色',dark:'深色'}[preference];theme.replaceChildren(icon(preference),document.createTextNode(text));theme.setAttribute('aria-label','外观：'+text+'，点击切换');theme.title='跟随系统 / 浅色 / 深色';};
+    theme.addEventListener('click',()=>{preference={system:'light',light:'dark',dark:'system'}[preference];try{localStorage.setItem('tokeisou-reading-theme',preference);}catch{}applyTheme();});system.addEventListener('change',applyTheme);controls.append(theme);document.body.append(controls);applyTheme();
+    const headings=[...content.querySelectorAll('h2,h3,h4')].filter(h=>!h.closest('.kg-card'));
+    let toc=null,nav=null,percent=null,active=-1;const links=[];
+    const clean=t=>t.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').trim();
+    if(headings.length>=3){
+      document.body.classList.add('tr-has-toc');toc=document.createElement('aside');toc.className='tr-toc';toc.setAttribute('aria-label','文章目录');
+      const head=document.createElement('div');head.className='tr-toc-head';const title=document.createElement('strong');title.textContent='文章导览';const count=document.createElement('span');count.className='tr-toc-count';count.textContent=headings.length+' 节';head.append(icon('list'),title,count);toc.append(head);
+      nav=document.createElement('nav');nav.setAttribute('aria-label','本文目录');toc.append(nav);
+      headings.forEach((h,i)=>{
+        if(!h.id){let id='reading-section-'+(i+1);while(document.getElementById(id))id+='-x';h.id=id;}
+        const name=h.textContent.trim(),a=document.createElement('a');a.textContent=clean(name)||name;a.title=name;a.href='#'+encodeURIComponent(h.id);a.dataset.level=h.tagName.slice(1);links.push(a);nav.append(a);
+        const anchor=document.createElement('a');anchor.className='tr-anchor';anchor.href=a.href;anchor.textContent='#';anchor.setAttribute('aria-label','链接到 '+name);h.append(anchor);
+      });
+      const foot=document.createElement('div');foot.className='tr-toc-foot';percent=document.createElement('span');percent.textContent='阅读进度 0%';const top=document.createElement('button');top.type='button';top.className='tr-top';top.title='回到文章开头';top.setAttribute('aria-label','回到文章开头');top.append(icon('up'));top.addEventListener('click',()=>content.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));foot.append(percent,top);toc.append(foot);content.prepend(toc);
+    }
+    content.querySelectorAll('pre').forEach(pre=>{
+      const code=pre.querySelector('code');if(!code||pre.closest('.tr-code'))return;
+      const previous=pre.previousElementSibling;const label=previous?.tagName==='P'&&/^(yaml|yml|html|css|javascript|js|json|bash|shell|python|sql|text|typescript|ts)$/i.test(previous.textContent.trim())?previous.textContent.trim():'';
+      const wrap=document.createElement('div');wrap.className='tr-code';pre.before(wrap);const bar=document.createElement('div');bar.className='tr-code-bar';const lang=document.createElement('span');const match=code.className.match(/language-([\w-]+)/);lang.textContent=(match?match[1]:label||'CODE').toUpperCase();if(label)previous.hidden=true;
+      const dots=document.createElement('span');dots.className='tr-dots';dots.setAttribute('aria-hidden','true');for(let i=0;i<3;i++)dots.append(document.createElement('i'));lang.prepend(dots);
+      const copy=document.createElement('button');copy.type='button';copy.className='tr-copy';copy.setAttribute('aria-live','polite');const reset=()=>copy.replaceChildren(icon('copy'),document.createTextNode('复制'));reset();
+      copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code.textContent);copy.textContent='已复制';}catch{const r=document.createRange();r.selectNodeContents(code);const s=getSelection();s.removeAllRanges();s.addRange(r);let ok=false;try{ok=document.execCommand('copy');}catch{}copy.textContent=ok?'已复制':'已选中，请按 Ctrl/Cmd+C';}setTimeout(reset,3500);});bar.append(lang,copy);wrap.append(bar,pre);
+    });
+    content.querySelectorAll('table').forEach(table=>{if(table.closest('.tr-table'))return;const wrap=document.createElement('div');wrap.className='tr-table';wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label','表格，可横向滚动');table.before(wrap);wrap.append(table);});
+    const progress=document.createElement('div');progress.className='tr-progress';progress.setAttribute('aria-hidden','true');document.body.append(progress);
+    let ticking=false;
+    function update(){
+      const r=content.getBoundingClientRect();const value=Math.round(Math.max(0,Math.min(100,-r.top/Math.max(1,r.height-innerHeight)*100)));progress.style.width=value+'%';
+      if(toc){
+        if(wide.matches){const reference=[...content.children].find(e=>e!==toc&&e.getBoundingClientRect().width>0);if(reference)toc.style.left=(reference.getBoundingClientRect().right+32)+'px';}else toc.style.removeProperty('left');
+        toc.classList.toggle('tr-in-view',r.top<innerHeight*.75&&r.bottom>160);percent.textContent='阅读进度 '+value+'%';
+        let next=0;headings.forEach((h,i)=>{if(h.getBoundingClientRect().top<=170)next=i;});
+        if(active!==next){links[active]?.removeAttribute('aria-current');links[next]?.setAttribute('aria-current','location');active=next;if(wide.matches){const lr=links[next].getBoundingClientRect(),nr=nav.getBoundingClientRect();if(lr.top<nr.top||lr.bottom>nr.bottom)nav.scrollTop+=lr.top-nr.top-nav.clientHeight/3;}}
+      }ticking=false;
+    }
+    const schedule=()=>{if(!ticking){ticking=true;requestAnimationFrame(update);}};
+    addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);addEventListener('load',schedule,{once:true});
+    if('ResizeObserver'in window)new ResizeObserver(schedule).observe(content);update();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>

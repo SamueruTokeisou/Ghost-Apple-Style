@@ -1,273 +1,77 @@
-# 🍎 Ghost-Apple-Style
+# Ghost-Apple-Style · Reading v3
 
-**为 Ghost 博客打造的苹果风格增强包 / Apple-style Enhancement Package for Ghost Blog**
+为 Ghost / Casper 文章页提供 Apple 风格的阅读界面：磨砂玻璃目录、清晰排版、代码复制与深浅色切换。
 
-一个轻量级、零依赖的 Ghost 博客美化方案，让你的博客拥有 macOS/iOS 般的优雅设计。
+Apple-inspired reading enhancements for Ghost / Casper, built with vanilla CSS and JavaScript. No jQuery or external libraries required.
 
-*A lightweight, zero-dependency enhancement package that brings macOS/iOS elegance to your Ghost blog.*
+[在线示例](https://www.286163668.xyz/ghost-blog/)
 
----
+## 本版功能
 
-## ✨ 特性 Features
+- 桌面右侧磨砂玻璃目录，带 SVG 线条图标、章节数量、当前章节高亮和阅读进度。
+- 自动提取正文 H2–H4；至少 3 个符合条件的标题才生成目录。Ghost 卡片内的标题不计入。
+- 目录不折叠。宽度 ≥1200px 时在右侧显示；阅读正文时出现，离开正文后隐藏。较窄屏幕在正文前完整展开。
+- 保留文章已有标题 ID 与链接；仅在目录中省略 emoji，正文内容不变。
+- Mac 风格代码栏、语言识别、一键复制；长代码单独横向滚动。
+- 表格滚动容器、引用块、行内代码和图片样式。
+- 跟随系统／浅色／深色三种外观，偏好保存在本机浏览器。
+- 返回文章开头、顶部阅读进度条、键盘焦点提示与打印样式。
+- 对部分原生页头／页脚链接文字做中文替换，保留链接目标。
 
-### 🖥️ Mac 风格代码块 / Mac-style Code Blocks
-- 经典的红黄绿三色窗口控制按钮 / Classic red-yellow-green window control buttons
-- 动态语言标题识别 / Dynamic language title detection
-- 一键复制代码功能 / One-click code copy button
-- 毛玻璃质感 / Frosted glass effect
-- 完美适配亮色/暗色模式 / Perfect light/dark mode support
+## 安装（推荐：与当前线上部署一致）
 
-### 📑 智能文章目录 / Smart Table of Contents
-- 自动提取 H2/H3 标题 / Auto-extract H2/H3 headings
-- iOS 风格的圆点指示器 / iOS-style dot indicators
-- 流畅的悬停动画 / Smooth hover animations
-- 响应式隐藏（小屏幕自动隐藏）/ Responsive hiding on small screens
-- 毛玻璃半透明卡片 / Frosted glass translucent card
+1. 先备份 Ghost 后台 **Settings → Code injection** 中已有的内容。
+2. 移除以前安装的本项目代码，避免旧版目录、复制按钮和样式重复；保留其他用途的注入代码。
+3. 将 [ghost-reading-v3-header.html](ghost-reading-v3-header.html) 的完整内容（含 `<style>`）粘贴到 **Site header**。
+4. 将 [ghost-reading-v3-footer.html](ghost-reading-v3-footer.html) 的完整内容（含 `<script>`）粘贴到 **Site footer**。
+5. 保存并刷新文章页面。
 
-### ⬆️ 返回顶部按钮 / Back to Top Button
-- 纯 CSS 绘制的箭头图标 / Pure CSS arrow icon
-- 毛玻璃背景效果 / Frosted glass background
-- 平滑滚动动画 / Smooth scroll animation
-- 悬停上浮交互 / Hover lift interaction
+Ghost 的页头注入放入页面 head，页脚注入放在页面底部。参见 [Ghost 官方 Code injection 文档](https://ghost.org/help/code-injection-styles/)。
 
-### 🌓 完整暗色模式支持 / Full Dark Mode Support
-- 自动跟随系统主题 / Auto follow system theme
-- 所有组件完美适配 / All components perfectly adapted
+### 单文件安装
 
----
+根目录 [Ghost-Apple-Style](Ghost-Apple-Style) 保留旧入口，内容已更新为 v3 样式和脚本的合并包，可整体放入 **Site footer**。推荐使用上述分开安装方式，以便样式更早加载。**两种安装方式只能选一种。**
 
-## 🚀 快速开始 Quick Start
+## 文件说明
 
-### 安装方法 Installation
+| 文件 | 用途 |
+| --- | --- |
+| `ghost-reading-v3-header.html` | 当前线上使用的页头样式 |
+| `ghost-reading-v3-footer.html` | 当前线上使用的页脚交互脚本 |
+| `Ghost-Apple-Style` | v3 合并安装包，兼容原项目入口 |
+| `CHANGELOG.md` | 本次更新及验证记录 |
+| `legacy/Ghost-Apple-Style-v1.html` | 更新前原版代码备份，不要与 v3 同时安装 |
+| `legacy/README-v1.md` | 更新前原说明存档，其中描述不适用于 v3 |
 
-1. **登录 Ghost 后台 / Login to Ghost Admin**
-   ```
-   https://your-blog.com/ghost
-   ```
+## 兼容范围与边界
 
-2. **进入代码注入设置 / Navigate to Code Injection**
-   ```
-   设置 Settings → 代码注入 Code Injection → 站点页脚 Site Footer
-   ```
-
-3. **复制粘贴代码 / Copy and Paste Code**
-   
-   将 `Ghost-Apple-Style` 中的完整代码粘贴到 **Site Footer** 区域
-   
-   *Paste the complete code from `Ghost-Apple-Style` into the **Site Footer** section*
-
-4. **保存并刷新 / Save and Refresh**
-   
-   点击保存，然后刷新你的博客页面即可看到效果！
-   
-   *Click Save, then refresh your blog page to see the magic!*
-
----
-
-## 📁 文件说明 File Description
-
-```
-Ghost-Apple-Style/
-├── ghost-apple-style.html    # 完整的代码包（CSS + JS）/ Complete package (CSS + JS)
-├── README.md                  # 项目说明文档 / Project documentation
-├── preview/                   # 预览截图 / Preview screenshots
-│   ├── light-mode.png        # 亮色模式预览 / Light mode preview
-│   └── dark-mode.png         # 暗色模式预览 / Dark mode preview
-└── LICENSE                    # MIT 许可证 / MIT License
-```
-
----
-
-
-## ⚙️ 自定义配置 Customization
-
-### 修改文章目录位置 / Change TOC Position
-
-在 CSS 中修改以下代码：
-
-*Modify the following code in CSS:*
+本版针对当前站点的 **Casper 5.12.5** 页面结构适配。脚本的文章入口为：
 
 ```css
-#toc-sidebar-container {
-    top: 120px;        /* 距离顶部距离 / Distance from top */
-    right: 30px;       /* 距离右侧距离 / Distance from right */
-    width: 280px;      /* 宽度 / Width */
-}
+body.post-template article.article .gh-content
 ```
 
-### 修改返回顶部按钮位置 / Change Back-to-Top Position
+桌面布局还依赖 Casper 的 `.gh-canvas` 与命名网格。更换主题时需重新核对选择器与布局，不承诺兼容所有第三方主题或 Ghost 历史版本。
 
-```css
-#back-to-top {
-    bottom: 30px;      /* 距离底部距离 / Distance from bottom */
-    right: 30px;       /* 距离右侧距离 / Distance from right */
-}
-```
+本版增强 Ghost 已渲染的文章 HTML，不替换 Markdown 解析器；不包含 Mermaid、数学公式、自动语法高亮或 Wiki.js 的全部扩展功能。不会修改 Ghost 主题文件或后台设置页面。
 
-### 修改代码块圆角 / Change Code Block Border Radius
+使用现代浏览器特性，包括 `backdrop-filter`、`color-mix()`、`dvh` 与 Unicode 正则表达式。已在当前 Edge 环境验证，未完成所有浏览器版本的兼容测试。复制优先使用 Clipboard API，失败时尝试选中并复制，最后提示手动复制。
 
-```css
-.mac-window-code {
-    border-radius: 8px;  /* 修改这个数值 / Change this value */
-}
-```
+## 自定义与排查
 
----
+- 配色：调整页头 CSS 中的 `--read-ink`、`--read-muted`、`--read-panel`、`--read-blue` 等变量。
+- 玻璃效果：调整 `.tr-toc` 的透明背景、模糊、边框和阴影。
+- 目录位置：桌面目录横向位置由正文边界计算；不要仅修改固定的 right 值。
+- 断点：如修改 1200px，需同步修改页头 CSS 和页脚脚本中的媒体查询。
+- 目录未出现：确认文章结构匹配、符合条件的标题不少于 3 个，并已滚动到正文区域。
+- 首页没有阅读工具属于预期行为；本版工具主要作用于文章页。
+- 重复目录／按钮：移除旧版或其他目录插件，确保只安装一份本项目。
+- 卸载：移除页头和页脚中本项目的注入块并刷新。文章内容和原有标题 ID 不会被写回修改。
 
-## 🔧 兼容性 Compatibility
+## 作者与致谢
 
-### 支持的浏览器 Supported Browsers
-- ✅ Chrome 90+
-- ✅ Safari 14+
-- ✅ Firefox 88+
-- ✅ Edge 90+
+作者：[SamueruTokeisou](https://github.com/SamueruTokeisou) · [X / Twitter](https://x.com/TokeisouSamueru)
 
-### 支持的 Ghost 版本 Supported Ghost Versions
-- ✅ Ghost 4.x
-- ✅ Ghost 5.x
+感谢 [Ghost](https://ghost.org/) 与 [Apple 设计资源](https://developer.apple.com/design/resources/) 带来的启发。本项目并非 Apple 官方产品。
 
-### 支持的主题 Supported Themes
-- ✅ Casper (官方主题 / Official theme)
-- ✅ Casper Legacy
-- ✅ 大多数第三方主题 / Most third-party themes
-
----
-
-## 💡 常见问题 FAQ
-
-### Q: 代码不生效怎么办？/ Code doesn't work?
-**A:** 
-1. 确保代码粘贴在 **Site Footer** 而不是 Site Header
-   
-   *Make sure code is pasted in **Site Footer**, not Site Header*
-
-2. 清除浏览器缓存后刷新页面
-   
-   *Clear browser cache and refresh the page*
-
-3. 检查是否有其他 CSS/JS 冲突
-   
-   *Check for CSS/JS conflicts with other code*
-
-### Q: 文章目录不显示？/ TOC not showing?
-**A:** 
-文章目录需要文章中至少有一个 H2 或 H3 标题才会显示。
-
-*TOC requires at least one H2 or H3 heading in your post to appear.*
-
-### Q: 暗色模式不工作？/ Dark mode not working?
-**A:** 
-确保你的系统或浏览器设置了暗色模式偏好设置。
-
-*Make sure your system or browser has dark mode preference enabled.*
-
-### Q: 可以只使用部分功能吗？/ Can I use only certain features?
-**A:** 
-可以！在代码中找到对应的 CSS/JS 部分删除即可。
-
-*Yes! Simply remove the corresponding CSS/JS sections in the code.*
-
----
-
-## 🛠️ 技术栈 Tech Stack
-
-- **纯 CSS3** - 无需任何 CSS 框架 / Pure CSS3, no frameworks needed
-- **原生 JavaScript** - 依赖 jQuery（Ghost 自带）/ Native JS with jQuery (included in Ghost)
-- **响应式设计** - 完美适配移动端 / Responsive design for mobile
-- **性能优化** - 零额外 HTTP 请求 / Zero additional HTTP requests
-
----
-
-## 📄 开源协议 License
-
-本项目采用 [MIT License](LICENSE) 开源协议。
-
-*This project is licensed under the [MIT License](LICENSE).*
-
-你可以自由地：
-- ✅ 商业使用 / Commercial use
-- ✅ 修改代码 / Modify
-- ✅ 分发代码 / Distribute
-- ✅ 私人使用 / Private use
-
-唯一要求：保留原作者版权声明。
-
-*The only requirement: Keep the original copyright notice.*
-
----
-
-## 🤝 贡献 Contributing
-
-欢迎提交 Issue 和 Pull Request！
-
-*Issues and Pull Requests are welcome!*
-
-### 贡献指南 Contributing Guidelines
-
-1. Fork 本项目 / Fork this repository
-2. 创建特性分支 / Create your feature branch
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. 提交更改 / Commit your changes
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-4. 推送到分支 / Push to the branch
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. 创建 Pull Request / Open a Pull Request
-
----
-
-## 🌟 Star History
-
-如果这个项目对你有帮助，请给它一个 ⭐️ 星标！
-
-*If this project helps you, please give it a ⭐️ star!*
-
----
-
-## 📧 联系方式 Contact
-
-- **作者 Author:** SamueruTokeisou
-- **X (Twitter):** [@TokeisouSamueru](https://x.com/TokeisouSamueru)
-- **GitHub:** [@SamueruTokeisou](https://github.com/SamueruTokeisou)
-
----
-
-## 🙏 致谢 Acknowledgments
-
-感谢以下项目和资源的启发：
-
-*Thanks to the following projects and resources for inspiration:*
-
-- [Ghost](https://ghost.org/) - 优秀的开源博客平台 / Excellent open-source blogging platform
-- [Apple Design Resources](https://developer.apple.com/design/resources/) - 苹果设计指南 / Apple design guidelines
-- [Clipboard.js](https://clipboardjs.com/) - 代码复制功能灵感 / Code copy inspiration
-
----
-
-## 📝 更新日志 Changelog
-
-### v1.0.0 (2025-01-xx)
-- 🎉 初始版本发布 / Initial release
-- ✨ Mac 风格代码块 / Mac-style code blocks
-- ✨ 智能文章目录 / Smart table of contents
-- ✨ 返回顶部按钮 / Back to top button
-- 🌓 完整暗色模式支持 / Full dark mode support
-
----
-
-<div align="center">
-
-**用 ❤️ 和 ☕️ 制作 / Made with ❤️ and ☕️**
-
-如果你喜欢这个项目，不妨请我喝杯咖啡？
-
-*If you like this project, buy me a coffee?*
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-支持作者-orange?style=for-the-badge&logo=buy-me-a-coffee)](https://www.buymeacoffee.com/yourusername)
-
-</div>
+原版 README 声明采用 MIT，但仓库此前未包含 LICENSE 文件；原说明已完整保存在 legacy 中，本次同步未新增或更改许可条款。
